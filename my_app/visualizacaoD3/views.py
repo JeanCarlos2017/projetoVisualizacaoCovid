@@ -1,21 +1,33 @@
-from flask import Flask, render_template, make_response, Blueprint
+from flask import Flask, render_template, make_response, Blueprint,jsonify
 from flask.views import MethodView
 from my_app import app
+import os
+
 
 #catalogo de visualizacao
-catalog = Blueprint('catalog', __name__, template_folder='templates',
-    static_folder='static')
-                    #static_url_path='static/assets')
+catalog = Blueprint("catalog", 'visualizacaoD3', template_folder='templates', static_folder='static')
+
 
 @app.errorhandler(404)
 def page_not_found(error):
     return "erro, página não encontrada"
-   #return render_template('page_not_found.html'), 404
 
 
 @catalog.route('/home')
 def home():
     return "Welcome to the Catalog Home."
+
+
+@catalog.route('/worldGeoJson')
+def WorldGeoJson():
+    with app.open_resource('static/datasets/world.geojson') as f:
+       return f.read()
+
+
+@catalog.route('/brazilGeoJson')
+def BrasilGeoJson():
+    with app.open_resource('static/datasets/brasil.geojson') as f:
+        return f.read()
 
 
 class HelloWorld(MethodView):
@@ -29,14 +41,10 @@ class BubbleChart(MethodView):
         return make_response(render_template('testModel.html'), 200, headers)
 
 
-#api._blueprint_setup_add_url_rule_patch('/h', view_func=HelloWorld.as_view('hello_world'))
-#app.add_url_rule('', view_func=HelloWorld.as_view('hello'))
-
 hello_view = HelloWorld.as_view('HelloWorld')
 app.add_url_rule(
     '/hello', view_func=hello_view, methods=['GET']
 )
-
 
 
 bbChart_view = BubbleChart.as_view('BubbleChart')

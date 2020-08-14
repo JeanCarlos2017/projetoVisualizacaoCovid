@@ -1,0 +1,16 @@
+#dados_hover{
+    background-color: #31373B;
+    color: white;
+    opacity: 0.9;
+    padding: 10px;
+    line-height: 1.8;
+}
+
+
+.container-fluid{
+    padding: 0;
+}
+
+body{
+  color: black;
+}
