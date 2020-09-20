@@ -34,6 +34,19 @@ def buscaDadosPorSemana(primeiro_dia, qntDias = 7):
         dicionario[item] = dados_semana
     return dicionario
 
+def buscaDadosTodasSemana():
+    #retorna um dicionário com os dados de todas as semanas
+    data_final = datetime.datetime.now()
+    dicionario_semanal = {}
+    contador_semana = 12
+    data_inicio = datetime.datetime(2020, 3, 14)  # fim da primeira semana
+    #dicionario_semanal[contador_semana] = buscaDadosPorSemana(data_inicio, 0)
+    while (data_final >= data_inicio + timedelta(days= 7)):
+        dicionario_semanal[contador_semana] = buscaDadosPorSemana(data_inicio)
+        data_inicio += timedelta(days= 7)
+        contador_semana += 1
+    return dicionario_semanal
+
 
 if __name__ == '__main__':
     URL_DADOS_ATUAL = "https://api.apify.com/v2/datasets/3S2T1ZBxB9zhRJTBB/items?format=json&clean=1"
@@ -44,8 +57,9 @@ if __name__ == '__main__':
     else:
         print(buscaDadosPorData(data_atual))
     # testando pegar dados de uma semana do dia 13/09 ao 19/09
-    data_test_semana = datetime.datetime(2020, 9, 12)
-    print(buscaDadosPorSemana(data_test_semana))
+    #data_test_semana = datetime.datetime(2020, 9, 12)
+    #print(buscaDadosPorSemana(data_test_semana))
+    print(buscaDadosTodasSemana())
 
 
 
