@@ -43,9 +43,13 @@ class BubbleChart(MethodView):
 
 class LineChart(MethodView):
     def get(self):
-        dados_covid = APICovid().getDadosPorData()
+        apiCovid = APICovid()
+        dados_covid_dia = apiCovid.getDadosPorData()
+        dados_covid_semanal = apiCovid.buscaDadosTodasSemana()
         headers = {'Content-Type': 'text/html'}
-        return make_response(render_template('LineChart.html', dados_covid= dados_covid), 200, headers)
+        return make_response(render_template('LineChart.html',
+                                             dados_covid=dados_covid_dia, dados_covid_semanal=dados_covid_semanal),
+                             200, headers)
 
 
 hello_view = HelloWorld.as_view('HelloWorld')

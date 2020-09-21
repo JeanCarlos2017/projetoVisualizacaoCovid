@@ -4,6 +4,9 @@
  <script type="text/javascript">
      var varFlask = {{ dados_covid|tojson }};
      console.log(JSON.stringify(varFlask));
+
+     var dados_covid_semanal = {{ dados_covid_semanal|tojson }};
+     console.log(JSON.stringify(dados_covid_semanal));
  </script>
  <script type=text/javascript src="{{url_for('static', filename='JS/LineChart.js') }}"></script>
 
