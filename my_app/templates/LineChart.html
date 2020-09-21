@@ -1,0 +1,10 @@
+{% extends "model-page.html" %}
+    <br>
+{% block content %}
+ <script type="text/javascript">
+     var varFlask = {{ dados_covid|tojson }};
+     console.log(JSON.stringify(varFlask));
+ </script>
+ <script type=text/javascript src="{{url_for('static', filename='JS/LineChart.js') }}"></script>
+
+{% endblock %}

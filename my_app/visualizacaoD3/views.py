@@ -1,6 +1,7 @@
 from flask import Flask, render_template, make_response, Blueprint,jsonify
 from flask.views import MethodView
 from my_app import app
+from APICovid.APICovid import APICovid
 import os
 
 
@@ -40,6 +41,12 @@ class BubbleChart(MethodView):
         headers = {'Content-Type': 'text/html'}
         return make_response(render_template('testModel.html'), 200, headers)
 
+class LineChart(MethodView):
+    def get(self):
+        dados_covid = APICovid().getDadosPorData()
+        headers = {'Content-Type': 'text/html'}
+        return make_response(render_template('LineChart.html', dados_covid= dados_covid), 200, headers)
+
 
 hello_view = HelloWorld.as_view('HelloWorld')
 app.add_url_rule(
@@ -50,5 +57,10 @@ app.add_url_rule(
 bbChart_view = BubbleChart.as_view('BubbleChart')
 app.add_url_rule(
     '/bb', view_func=bbChart_view, methods=['GET']
+)
+
+lineChart_view = LineChart.as_view('LineChart')
+app.add_url_rule(
+    '/line', view_func=lineChart_view, methods=['GET']
 )
 
