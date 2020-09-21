@@ -70,3 +70,5 @@ class GlobeGL {
 
 
 }
+var globeGL = new GlobeGL();
+globeGL.criarGlobe();
