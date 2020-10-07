@@ -24,13 +24,17 @@ Para usar o programa é necessário ter o Python  instalado em sua máquina, e s
  #### 3° Execute a api
    Execute o arquivo <b> run.py </b> com o Python, ou se preferir use a IDE e sua preferência
   
- <b> Observação ter acesso as visualizações gráficas é necessário conexão com a internet, porque o projeto usa uma importação remota da biblioteca D3.js </b>
+ <b> Observação: ter acesso as visualizações gráficas é necessário conexão com a internet, porque o projeto usa uma importação remota da biblioteca D3.js, além do uso da API com os ddados do Covid </b>
  
  
  ## Construído com 
  [Python](https://www.python.org/) </br>
+ 
  [Flask-RESTful](https://flask-restful.readthedocs.io/en/latest/)</br>
+ 
  [D3.js](https://d3js.org/)</br>
+ 
+ Para ter acesso a API com os dados do Covid-19 clique [aqui](https://api.apify.com/v2/datasets/3S2T1ZBxB9zhRJTBB/items?format=json&clean=1)
  
 
  
