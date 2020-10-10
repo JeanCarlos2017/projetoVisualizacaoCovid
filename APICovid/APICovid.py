@@ -9,6 +9,7 @@ class APICovid:
         self.dados_covid_dia= {}
         self.dados_covid_semanal={}
         self.dados_todos_dias={}
+        self.dados_covid_dia = self.retornaDados()
 
     def retornaDados(self):
         response = requests.get(self.URL_API)
@@ -32,17 +33,44 @@ class APICovid:
             if string_data in x.get('lastUpdatedAtSource'):
                 return x
 
+   # retorna a quantidade de infectados e mortos de todos os dias
+    def buscaDadosDiaDia(self):
+        data_final = datetime.datetime.now()
+        data_inicio = datetime.datetime(2020, 3, 14)
 
+        #no dia 0 nao tem nenhum caso, é o início
+        contador_dia = 0
+        self.dados_todos_dias[0] = {'infected': 0, 'deceased': 0}
+
+        while (data_final >= data_inicio):
+            dados_ultimo_dia = self.buscaDadosPorData(data_inicio)
+
+            if dados_ultimo_dia != None:
+                contador_dia += 1
+                self.dados_todos_dias[contador_dia]=\
+                    self.subtracaoDadosDiasDiferentes(self.dados_todos_dias[contador_dia-1], dados_ultimo_dia)
+            print('contador dia :: {}'.format(contador_dia))
+            data_inicio += timedelta(days=1)
+        return self.dados_todos_dias
 
     #mensagem de erro: dado nao encontrado
     def erroDiaNaoEncontrado(self, data):
         #a API pula alguns dias
         return {'erro': 'dia {} não encontrado na API nos desculpe por isso '.format(data.strftime("%Y-%m-%d"))}
 
+    def subtracaoDadosDiasDiferentes(self, dados_primeiro_dia, dados_ultimo_dia):
+        #usado para retornar os que surgiu no ultimo dia/semana, para isso é necessário comparar datas
+        dicionario = {'infected': 0, 'deceased': 0}
+        for item in dicionario:
+            # subtrai os dados do ultimo dia com o primeiro dia da semana para saber os dados desse período
+            dados_semana = dados_ultimo_dia.get(item) - dados_primeiro_dia.get(item)
+            dicionario[item] = dados_semana
+        return dicionario
+
     #retorna a quantidade de infectados e mortos na semana
     def buscaDadosPorSemana(self, primeiro_dia_semana, qntDias=7):
         # retorna a quantidade de infectados e mortos  da semana
-        dicionario = {'infected': 0, 'deceased': 0}
+
         # caso a semana tenha se encerrado são 7 dias, do contrário ver quantos dias ainda restam
         ultimo_dia = primeiro_dia_semana + timedelta(days=qntDias)
         # obtem os dados do primeiro e ultimo dia da semana
@@ -54,11 +82,8 @@ class APICovid:
 
         if (dados_ultimo_dia == None):
             return self.erroDiaNaoEncontrado(ultimo_dia)
-
-        for item in dicionario:
-            # subtrai os dados do ultimo dia com o primeiro dia da semana para saber os dados desse período
-            dados_semana = dados_ultimo_dia.get(item) - dados_primeiro_dia.get(item)
-            dicionario[item] = dados_semana
+        #compara a semana atual com a semana anterior para assim saber a quantidade de mostes e infectados que ocorreu na semana atual
+        dicionario = self.subtracaoDadosDiasDiferentes(dados_primeiro_dia, dados_ultimo_dia)
         return dicionario
 
     def buscaDadosTodasSemana(self):
@@ -75,5 +100,6 @@ class APICovid:
 
 if __name__ == '__main__':
     dadosAPI =  APICovid()
-    print(dadosAPI.getDadosPorData())
-    print(dadosAPI.buscaDadosTodasSemana())
+    #print(dadosAPI.getDadosPorData())
+    #print(dadosAPI.buscaDadosTodasSemana())
+    print(dadosAPI.buscaDadosDiaDia())
