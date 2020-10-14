@@ -20,8 +20,11 @@
 
 
 <script type="text/javascript">
-     var varFlask = {{ dados_covid|tojson }};
-     console.log(JSON.stringify(varFlask));
+     var dados_diarios  = {{ dados_diarios|tojson }};
+     console.log(JSON.stringify(dados_diarios));
+
+     var dados_acumulados = {{ dados_acumulados|tojson }}
+     console.log(JSON.stringify(dados_acumulados));
 
      var dados_covid_semanal = {{ dados_covid_semanal|tojson }};
      console.log(JSON.stringify(dados_covid_semanal));

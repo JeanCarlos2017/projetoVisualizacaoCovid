@@ -41,14 +41,19 @@ class BubbleChart(MethodView):
         headers = {'Content-Type': 'text/html'}
         return make_response(render_template('testModel.html'), 200, headers)
 
-class LineChart(MethodView):
+
+class Home(MethodView):
     def get(self):
         apiCovid = APICovid()
-        dados_covid_dia = apiCovid.getDadosPorData()
-        dados_covid_semanal = apiCovid.buscaDadosTodasSemana()
+        apiCovid.retornaInfectadosEMortos()
+        apiCovid.buscaDadosDiaDia()
+        dados_covid_semanal = apiCovid.buscaDadosTodasSemana() #dicionário a quantidade de infectados e mortos acumulados semanalmente
+        dados_acumulados = apiCovid.dados_covid_refinado #dicionário a quantidade de infectados e mortos acumulados
+        dados_diarios = apiCovid.dados_todos_dias #dicionário com a quantidade de infectados e mortos de todos os dias
+
         headers = {'Content-Type': 'text/html'}
-        return make_response(render_template('LineChart.html',
-                                             dados_covid=dados_covid_dia, dados_covid_semanal=dados_covid_semanal),
+        return make_response(render_template('index.html', dados_diarios= dados_diarios,
+                                             dados_acumulados=dados_acumulados, dados_covid_semanal=dados_covid_semanal),
                              200, headers)
 
 
@@ -63,8 +68,8 @@ app.add_url_rule(
     '/bb', view_func=bbChart_view, methods=['GET']
 )
 
-lineChart_view = LineChart.as_view('LineChart')
+lineChart_view = Home.as_view('LineChart')
 app.add_url_rule(
-    '/line', view_func=lineChart_view, methods=['GET']
+    '/', view_func=lineChart_view, methods=['GET']
 )
 
