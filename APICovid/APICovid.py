@@ -6,19 +6,36 @@ import json
 class APICovid:
     def __init__(self):
         self.URL_API = "https://api.apify.com/v2/datasets/3S2T1ZBxB9zhRJTBB/items?format=json&clean=1"
-        self.dados_covid_dia= {}
         self.dados_covid_semanal={}
         self.dados_todos_dias={}
-        self.dados_covid_dia = self.retornaDados()
+        self.dados_covid = self.retornaDados()
+        self.dados_covid_refinado = {} #contendo apenas os infectados e mortos
 
     def retornaDados(self):
         response = requests.get(self.URL_API)
         if response.status_code == 200:
             return response.json()
 
+    def refinaDadosJSON(self, dados_diario):
+        dicionario = {'infected': 0, 'deceased': 0}
+        for item in dicionario:
+            # print("item {} :: dados_item :: {}".format(item, dados_diario.get(item)))
+            dicionario[item] = dados_diario.get(item)
+        return dicionario
+
+    def retornaInfectadosEMortos(self):
+        contador_dia = 0
+        data_final = datetime.datetime.now()
+        data_inicio = datetime.datetime(2020, 3, 14)
+        while (data_final >= data_inicio):
+            dados_diario = self.buscaDadosPorData(data_inicio)
+            if dados_diario != None:
+                self.dados_covid_refinado[contador_dia] = self.refinaDadosJSON(dados_diario)
+                contador_dia+=1
+            data_inicio += timedelta(days=1)
+
     #método para teste simples
     def getDadosPorData(self):
-        self.dados_covid_dia = self.retornaDados()
         data_atual = datetime.datetime(2020, 6, 9)
         dados_data = self.buscaDadosPorData(data_atual)
         if dados_data == None:
@@ -29,7 +46,7 @@ class APICovid:
     #retorna dados da data especificada
     def buscaDadosPorData(self, data):
         string_data = data.strftime("%Y-%m-%d")
-        for x in self.dados_covid_dia:
+        for x in self.dados_covid:
             if string_data in x.get('lastUpdatedAtSource'):
                 return x
 
@@ -37,6 +54,7 @@ class APICovid:
     def buscaDadosDiaDia(self):
         data_final = datetime.datetime.now()
         data_inicio = datetime.datetime(2020, 3, 14)
+        #data_inicio = datetime.datetime(2020, 10, 11)
 
         #no dia 0 nao tem nenhum caso, é o início
         contador_dia = 0
@@ -44,12 +62,10 @@ class APICovid:
 
         while (data_final >= data_inicio):
             dados_ultimo_dia = self.buscaDadosPorData(data_inicio)
-
             if dados_ultimo_dia != None:
                 contador_dia += 1
                 self.dados_todos_dias[contador_dia]=\
                     self.subtracaoDadosDiasDiferentes(self.dados_todos_dias[contador_dia-1], dados_ultimo_dia)
-            print('contador dia :: {}'.format(contador_dia))
             data_inicio += timedelta(days=1)
         return self.dados_todos_dias
 
@@ -63,7 +79,7 @@ class APICovid:
         dicionario = {'infected': 0, 'deceased': 0}
         for item in dicionario:
             # subtrai os dados do ultimo dia com o primeiro dia da semana para saber os dados desse período
-            dados_semana = dados_ultimo_dia.get(item) - dados_primeiro_dia.get(item)
+            dados_semana = int(dados_ultimo_dia.get(item) - dados_primeiro_dia.get(item))
             dicionario[item] = dados_semana
         return dicionario
 
@@ -102,4 +118,7 @@ if __name__ == '__main__':
     dadosAPI =  APICovid()
     #print(dadosAPI.getDadosPorData())
     #print(dadosAPI.buscaDadosTodasSemana())
-    print(dadosAPI.buscaDadosDiaDia())
+    #print(dadosAPI.dados_covid)
+    #print(dadosAPI.buscaDadosDiaDia())
+    dadosAPI.retornaInfectadosEMortos()
+    print(dadosAPI.dados_covid_refinado)
