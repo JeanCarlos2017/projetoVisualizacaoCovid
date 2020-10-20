@@ -15,7 +15,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 from my_app.visualizacaoD3.views import catalog
 db = SQLAlchemy(app)
 
-print('Print {}'.format(app.static_folder))
+#print('Print {}'.format(app.static_folder))
 
 app.register_blueprint(catalog)
 

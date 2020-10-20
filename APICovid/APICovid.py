@@ -57,7 +57,7 @@ class APICovid:
         self.retornaInfectadosEMortos() #dicionário a quantidade de infectados e mortos acumulados
         contador_dia = 0
         quantidade_dias = self.dados_covid_refinado.__len__()
-        print('quantidade de dias :: {}'.format(quantidade_dias))
+        #print('quantidade de dias :: {}'.format(quantidade_dias))
 
         while (contador_dia < quantidade_dias-1):
             dados_anterior = self.dados_covid_refinado[contador_dia] # quantidade de infectados e mortos do dia anterior
