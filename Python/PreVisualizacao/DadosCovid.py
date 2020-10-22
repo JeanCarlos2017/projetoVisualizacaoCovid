@@ -5,8 +5,9 @@ class DadosCovid:
         apiCovid = APICovid()
         apiCovid.retornaInfectadosEMortos()
         apiCovid.buscaDadosDiaDia()
+        apiCovid.buscaDadosTodasSemana()
         # dicionário a quantidade de infectados e mortos acumulados semanalmente
-        self.dados_covid_semanal = apiCovid.buscaDadosTodasSemana()
+        self.dados_covid_semanal = apiCovid.dados_covid_semanal
         # dicionário a quantidade de infectados e mortos acumulados
         self.dados_acumulados = apiCovid.dados_covid_refinado
         # dicionário com a quantidade de infectados e mortos de todos os dias
