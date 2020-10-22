@@ -112,7 +112,7 @@ class APICovid:
 
 
 if __name__ == '__main__':
-    dadosAPI =  APICovid()
+    dadosAPI = APICovid()
     #retorna os dados de acordo com uma data
     #print(dadosAPI.getDadosPorData())
 
