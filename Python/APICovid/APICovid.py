@@ -17,11 +17,12 @@ class APICovid:
             return response.json()
 
     def refinaDadosJSON(self, dados_diario, data):
-        dicionario = {'infected': 0, 'deceased': 0}
+        dicionario = {'infected': 0, 'deceased': 0, 'data': data.strftime('%d/%m/%Y')}
         for item in dicionario:
             # print("item {} :: dados_item :: {}".format(item, dados_diario.get(item)))
-            dicionario[item] = dados_diario.get(item)
-        dicionario['data'] = data
+            if item != 'data':
+                dicionario[item] = dados_diario.get(item)
+
         return dicionario
 
     #retorna em um dicionário a quantidade de infectados e mortos acumulados
@@ -57,7 +58,6 @@ class APICovid:
         self.retornaInfectadosEMortos() #dicionário a quantidade de infectados e mortos acumulados
         contador_dia = 0
         quantidade_dias = self.dados_covid_refinado.__len__()
-        #print('quantidade de dias :: {}'.format(quantidade_dias))
 
         while (contador_dia < quantidade_dias-1):
             dados_anterior = self.dados_covid_refinado[contador_dia] # quantidade de infectados e mortos do dia anterior
@@ -78,6 +78,7 @@ class APICovid:
             # subtrai os dados do ultimo dia com o primeiro dia da semana para saber os dados desse período
             dados_semana = int(dados_ultimo_dia.get(item) - dados_primeiro_dia.get(item))
             dicionario[item] = dados_semana
+        dicionario['data'] = dados_ultimo_dia['data']
         return dicionario
 
     #retorna a quantidade de infectados e mortos na semana
