@@ -17,7 +17,7 @@ class APICovid:
             return response.json()
 
     def refinaDadosJSON(self, dados_diario, data):
-        dicionario = {'infected': 0, 'deceased': 0, 'data': data.strftime('%d/%m/%Y')}
+        dicionario = {'infected': 0, 'deceased': 0, 'data': data.strftime('%d-%m-%Y')}
         for item in dicionario:
             if item != 'data':
                 dicionario[item] = dados_diario.get(item)
@@ -85,9 +85,9 @@ class APICovid:
         data_final = datetime.datetime.now()
         data_inicio = datetime.datetime(2020, 3, 14)  # fim da primeira semana
         while (data_final >= data_inicio + timedelta(days=7)):
-            dados_anterior = self.buscaPorDataEmDadosRefinados(data_inicio.strftime('%d/%m/%Y'))
+            dados_anterior = self.buscaPorDataEmDadosRefinados(data_inicio.strftime('%d-%m-%Y'))
             data_inicio += timedelta(days=7)
-            dados_atual =  self.buscaPorDataEmDadosRefinados(data_inicio.strftime('%d/%m/%Y'))
+            dados_atual =  self.buscaPorDataEmDadosRefinados(data_inicio.strftime('%d-%m-%Y'))
             if dados_anterior == None or dados_atual == None:
                 self.dados_covid_semanal[contador_semana] = None
             else:
@@ -96,14 +96,13 @@ class APICovid:
 
 
 if __name__ == '__main__':
-     dadosAPI = APICovid()
+    dadosAPI = APICovid()
     #retorna os dados de acordo com uma data
     #print(dadosAPI.getDadosPorData())
 
     #retorna a quantidade de casos que ocorreu a cada semana
-    print(dadosAPI.buscaDadosTodasSemana())
-    print((dadosAPI.dados_covid_semanal))
-
+    #print(dadosAPI.buscaDadosTodasSemana())
+    #print(dadosAPI.dados_covid)
     #retorna a quantidade de casos que ocorreu no dia
     dadosAPI.retornaInfectadosEMortos()
     dadosAPI.buscaDadosDiaDia()
